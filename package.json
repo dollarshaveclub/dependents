@@ -1,0 +1,33 @@
+{
+  "name": "@dollarshaveclub/dependents",
+  "version": "1.0.0",
+  "description": "Lists dependent repo versions for a particular package",
+  "main": "index.js",
+  "bin": {
+    "dependents": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint . --fix --cache",
+    "eslint:ci": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dollarshaveclub/dependents.git"
+  },
+  "author": "Jacob Kelley <jacob.kelley@dollarshaveclub.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dollarshaveclub/dependents/issues"
+  },
+  "homepage": "https://github.com/dollarshaveclub/dependents#readme",
+  "dependencies": {
+    "@octokit/rest": "^14.0.4",
+    "colors": "^1.1.2",
+    "left-pad": "^1.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-dollarshaveclub": "^2.2.0"
+  }
+}
