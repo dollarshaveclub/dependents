@@ -1,26 +1,36 @@
 #!/usr/bin/env node
-const colors = require('colors/safe')
+const colors = require('colors')
+const program = require('commander')
+const path = require('path')
+
+const { version } = require('../package.json')
 const { dependentPackages } = require('../lib')
 
-const dir = process.cwd()
-const token = process.env.GITHUB_TOKEN
+program
+  .version(version)
+  .option('-p, --package [file]', 'The path to the package.json file that contains dependents')
+  .option('-r, --remote', 'Search against remote repositories in your org')
+  .option('-i, --installed', 'Only show packages that have the dependency installed')
+  .parse(process.argv)
 
+const packagePath = program.package || path.join(process.cwd(), 'package.json')
+const token = process.env.GITHUB_TOKEN
 if (!token) throw new Error(`\nEnvironment variable GITHUB_TOKEN must be set.\nGenerate one with ${colors.cyan('repo')} access here: https://github.com/settings/tokens/new\n`)
 
-dependentPackages(dir, token)
+dependentPackages(packagePath, program.remote, token)
   .then(({ clientPackage, dependentPackages }) => {
     console.log(`${colors.bold(clientPackage.name)}: ${colors.cyan(colors.bold(clientPackage.version))}`)
-
     dependentPackages
-      .sort((a, b) => a.name > b.name)
-      .forEach((dependentPackage, i) => {
+      .sort((a, b) => a.data.name > b.data.name)
+      .forEach(({ data, repo, note }, i) => {
         let prefix = ' ├─ '
         if ((i === 0 && dependentPackages.length === 1) || i === dependentPackages.length - 1) prefix = ' └─ '
 
         const version =
-          ((dependentPackage.dependencies || {})[clientPackage.name]) ||
-          (dependentPackage.devDependencies || {})[clientPackage.name]
-        console.log(`${prefix}${dependentPackage.name}: ${version || colors.grey('Not Installed')}`)
+          ((data.dependencies || {})[clientPackage.name]) ||
+          (data.devDependencies || {})[clientPackage.name]
+
+        if ((program.installed && version) || !program.installed) console.log(`${prefix}${repo}: ${note ? colors.yellow(note) : version || colors.grey('Not Installed')}`)
       })
   })
   .catch(e => console.error(colors.red(e.message)))
