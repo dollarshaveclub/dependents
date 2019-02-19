@@ -15,7 +15,7 @@ program
   .option('-i, --installed', 'Only show packages that have the dependency installed')
   .parse(process.argv)
 
-if (program.t) {
+if (program.text) {
   colors = {
     cyan: (s) => s,
     yellow: (s) => s,
