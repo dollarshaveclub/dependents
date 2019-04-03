@@ -1,6 +1,6 @@
 {
   "name": "@dollarshaveclub/dependents",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Lists dependent repo versions for a particular package",
   "main": "index.js",
   "bin": {
